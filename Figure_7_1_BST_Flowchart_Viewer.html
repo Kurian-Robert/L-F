@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figure 7.1: Binary Search Tree Flowchart | Campus Lost & Found System</title>
+    <style>
+        :root {
+            --bg-color: #F8FAFC;
+            --surface-color: #FFFFFF;
+            --primary-color: #0F172A;
+            --accent-blue: #2563EB;
+            --accent-hover: #1D4ED8;
+            --border-color: #E2E8F0;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -0.3px;
+        }
+
+        .brand p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .badge-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            background: #EEF2F6;
+            color: #334155;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #CBD5E1;
+        }
+
+        /* Main Workspace */
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            height: calc(100vh - 75px);
+        }
+
+        /* Left Canvas Viewport */
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Viewport Toolbar */
+        .toolbar {
+            background: #F1F5F9;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .tab-group {
+            display: flex;
+            gap: 6px;
+            background: #E2E8F0;
+            padding: 3px;
+            border-radius: 8px;
+        }
+
+        .tab-btn {
+            border: none;
+            background: transparent;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab-btn.active {
+            background: #FFFFFF;
+            color: #0F172A;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+
+        .controls-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            background: #FFFFFF;
+            color: var(--text-dark);
+        }
+
+        .btn:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: #FFFFFF;
+            border-color: var(--accent-blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Interactive SVG Container */
+        .viewport-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            cursor: grab;
+            overflow: auto;
+            background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .viewport-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .svg-canvas {
+            transform-origin: center center;
+            transition: transform 0.08s ease-out;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .svg-canvas svg {
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.06));
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        /* Right Side Sidebar */
+        aside {
+            width: 380px;
+            background: var(--surface-color);
+            border-left: 1px solid var(--border-color);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: #F8FAFC;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card p, .card li {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .card ul {
+            margin-left: 18px;
+            margin-top: 6px;
+        }
+
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .complexity-table th, .complexity-table td {
+            border: 1px solid #CBD5E1;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .complexity-table th {
+            background: #F1F5F9;
+            font-weight: 700;
+        }
+
+        pre code {
+            display: block;
+            background: #0F172A;
+            color: #F8FAFC;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 11.5px;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0F172A;
+            color: #FFFFFF;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>Campus Lost & Found Management System</h1>
+            <p>Figure 7.1: Phase 2 Binary Search Tree (BST) Lookup & Deletion Algorithm Flowchart</p>
+        </div>
+        <div class="badge-bar">
+            <span class="badge">MCA Semester 1</span>
+            <span class="badge">DSA (26MCD1L211)</span>
+            <span class="badge">Kurian Robert (26MCAC28)</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Canvas Area -->
+        <section class="canvas-area">
+            <div class="toolbar">
+                <div class="tab-group">
+                    <button class="tab-btn active" id="tab1-btn" onclick="switchView('diag1')">
+                        Figure 7.1: BST Lookup (Standard)
+                    </button>
+                    <button class="tab-btn" id="tab2-btn" onclick="switchView('diag2')">
+                        Figure 7.1 Extended: Lookup & Deletion
+                    </button>
+                </div>
+
+                <div class="controls-group">
+                    <button class="btn" onclick="zoomIn()" title="Zoom In (+)">➕</button>
+                    <button class="btn" onclick="zoomOut()" title="Zoom Out (-)">➖</button>
+                    <button class="btn" onclick="resetZoom()" title="Reset Zoom">🔄 Reset (100%)</button>
+                    <button class="btn btn-primary" onclick="downloadCurrentSVG()">⬇ Download SVG</button>
+                    <button class="btn" onclick="copyMermaid()">📋 Copy Mermaid</button>
+                </div>
+            </div>
+
+            <div class="viewport-wrapper" id="viewport" onwheel="handleWheel(event)" onmousedown="startPan(event)">
+                <div class="svg-canvas" id="canvas">
+                    <div id="view-diag1" style="display: block;">
+                        <!-- Figure 7.1: Phase 2: Binary Search Tree (BST) Lookup Flowchart (Orthogonal Lines & A4 Fit) -->
+<svg id="render_ortho_a4" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width: 464.6627197265625px;" viewBox="-8 -8 464.6627197265625 841.12109375" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#render_ortho_a4{font-family:Times New Roman,serif;font-size:11px;fill:#000000;}#render_ortho_a4 .error-icon{fill:hsl(180, 0%, 100%);}#render_ortho_a4 .error-text{fill:rgb(0, 0, 0);stroke:rgb(0, 0, 0);}#render_ortho_a4 .edge-thickness-normal{stroke-width:2px;}#render_ortho_a4 .edge-thickness-thick{stroke-width:3.5px;}#render_ortho_a4 .edge-pattern-solid{stroke-dasharray:0;}#render_ortho_a4 .edge-pattern-dashed{stroke-dasharray:3;}#render_ortho_a4 .edge-pattern-dotted{stroke-dasharray:2;}#render_ortho_a4 .marker{fill:#000000;stroke:#000000;}#render_ortho_a4 .marker.cross{stroke:#000000;}#render_ortho_a4 svg{font-family:Times New Roman,serif;font-size:11px;}#render_ortho_a4 .label{font-family:Times New Roman,serif;color:#000000;}#render_ortho_a4 .cluster-label text{fill:rgb(0, 0, 0);}#render_ortho_a4 .cluster-label span,#render_ortho_a4 p{color:rgb(0, 0, 0);}#render_ortho_a4 .label text,#render_ortho_a4 span,#render_ortho_a4 p{fill:#000000;color:#000000;}#render_ortho_a4 .node rect,#render_ortho_a4 .node circle,#render_ortho_a4 .node ellipse,#render_ortho_a4 .node polygon,#render_ortho_a4 .node path{fill:#FFFFFF;stroke:#000000;stroke-width:1px;}#render_ortho_a4 .flowchart-label text{text-anchor:middle;}#render_ortho_a4 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#render_ortho_a4 .node .label{text-align:center;}#render_ortho_a4 .node.clickable{cursor:pointer;}#render_ortho_a4 .arrowheadPath{fill:#0b0b0b;}#render_ortho_a4 .edgePath .path{stroke:#000000;stroke-width:2.0px;}#render_ortho_a4 .flowchart-link{stroke:#000000;fill:none;}#render_ortho_a4 .edgeLabel{background-color:hsl(-120, 0%, 100%);text-align:center;}#render_ortho_a4 .edgeLabel rect{opacity:0.5;background-color:hsl(-120, 0%, 100%);fill:hsl(-120, 0%, 100%);}#render_ortho_a4 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#render_ortho_a4 .cluster rect{fill:hsl(180, 0%, 100%);stroke:hsl(180, 0%, 90%);stroke-width:1px;}#render_ortho_a4 .cluster text{fill:rgb(0, 0, 0);}#render_ortho_a4 .cluster span,#render_ortho_a4 p{color:rgb(0, 0, 0);}#render_ortho_a4 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Times New Roman,serif;font-size:12px;background:hsl(180, 0%, 100%);border:1px solid hsl(180, 0%, 90%);border-radius:2px;pointer-events:none;z-index:100;}#render_ortho_a4 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#render_ortho_a4 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}#render_ortho_a4 .default rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;color:rgb(0, 0, 0)!important;}#render_ortho_a4 .default polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;color:rgb(0, 0, 0)!important;}#render_ortho_a4 .default ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;color:rgb(0, 0, 0)!important;}#render_ortho_a4 .default circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;color:rgb(0, 0, 0)!important;}#render_ortho_a4 .default path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;color:rgb(0, 0, 0)!important;}#render_ortho_a4 .default tspan{fill:rgb(0, 0, 0)!important;}#render_ortho_a4 .term rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;rx:15px!important;ry:15px!important;}#render_ortho_a4 .term polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;rx:15px!important;ry:15px!important;}#render_ortho_a4 .term ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;rx:15px!important;ry:15px!important;}#render_ortho_a4 .term circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;rx:15px!important;ry:15px!important;}#render_ortho_a4 .term path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;rx:15px!important;ry:15px!important;}#render_ortho_a4 .dec rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#render_ortho_a4 .dec polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#render_ortho_a4 .dec ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#render_ortho_a4 .dec circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#render_ortho_a4 .dec path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#render_ortho_a4 .proc rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;}#render_ortho_a4 .proc polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;}#render_ortho_a4 .proc ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;}#render_ortho_a4 .proc circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;}#render_ortho_a4 .proc path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.2px!important;}#render_ortho_a4 .conn rect{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1px!important;}#render_ortho_a4 .conn polygon{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1px!important;}#render_ortho_a4 .conn ellipse{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1px!important;}#render_ortho_a4 .conn circle{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1px!important;}#render_ortho_a4 .conn path{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1px!important;}</style><g><marker id="render_ortho_a4_flowchart-pointEnd" class="marker flowchart" viewBox="0 0 10 10" refX="6" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="render_ortho_a4_flowchart-pointStart" class="marker flowchart" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="render_ortho_a4_flowchart-circleEnd" class="marker flowchart" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="render_ortho_a4_flowchart-circleStart" class="marker flowchart" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="render_ortho_a4_flowchart-crossEnd" class="marker cross flowchart" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="render_ortho_a4_flowchart-crossStart" class="marker cross flowchart" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M171.216,38L171.216,38L171.216,60.5L171.216,60.5L171.216,77.7" id="L-Start-TopEntry-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-Start LE-TopEntry" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M164.701,94.217L118.64,94.217L118.64,120.5L119.025,120.5L119.025,138.201" id="L-TopEntry-CheckNull-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-TopEntry LE-CheckNull" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M89.91,242.105L40.763,242.105L40.763,299.335L40.763,299.335L40.763,373.527" id="L-CheckNull-NotFound-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckNull LE-NotFound" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M148.37,242.105L196.518,242.105L196.518,299.335L196.926,299.335L196.926,323.036" id="L-CheckNull-CheckMatch-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckNull LE-CheckMatch" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M165.633,436.934L116.45,436.934L116.45,496.319L116.45,496.319L116.45,573.17" id="L-CheckMatch-MatchFound-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckMatch LE-MatchFound" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M228.403,436.934L276.585,436.934L276.585,496.319L276.994,496.319L276.994,520.02" id="L-CheckMatch-CheckLess-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckMatch LE-CheckLess" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M247.815,641.351L208.334,641.351L208.334,698.621L208.334,698.621L208.334,721.821" id="L-CheckLess-GoLeft-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckLess LE-GoLeft" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M306.356,641.351L344.836,641.351L344.836,698.621L344.836,698.621L344.836,721.821" id="L-CheckLess-GoRight-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckLess LE-GoRight" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M208.334,765.121L208.334,765.121L208.334,787.621L316.738,787.621L316.738,814.537" id="L-GoLeft-BotRail-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-GoLeft LE-BotRail" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M344.836,765.121L344.836,765.121L344.836,787.621L335.089,787.621L335.089,806.276" id="L-GoRight-BotRail-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-GoRight LE-BotRail" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path><path d="M336.388,815.616L437.303,815.616L437.303,787.621L437.303,787.621L437.303,746.121L437.303,746.121L437.303,698.621L437.303,698.621L437.303,597.47L437.303,597.47L437.303,496.319L437.303,496.319L437.303,397.827L437.303,397.827L437.303,299.335L437.303,299.335L437.303,206.917L437.303,206.917L437.303,120.5L183.935,120.5L183.935,91.934" id="L-BotRail-TopEntry-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-BotRail LE-TopEntry" style="fill:none;" marker-end="url(#render_ortho_a4_flowchart-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel" transform="translate(40.7626953125, 299.3349609375)"><g class="label" transform="translate(-8.362548828125, -6)"><rect rx="0" ry="0" width="16.714664459228516" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes</tspan></text></g></g><g class="edgeLabel" transform="translate(196.517578125, 299.3349609375)"><g class="label" transform="translate(-7.471923828125, -6)"><rect rx="0" ry="0" width="14.936822891235352" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No</tspan></text></g></g><g class="edgeLabel" transform="translate(116.4498291015625, 496.3193359375)"><g class="label" transform="translate(-8.362548828125, -6)"><rect rx="0" ry="0" width="16.714664459228516" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes</tspan></text></g></g><g class="edgeLabel" transform="translate(276.5853271484375, 496.3193359375)"><g class="label" transform="translate(-7.471923828125, -6)"><rect rx="0" ry="0" width="14.936822891235352" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No</tspan></text></g></g><g class="edgeLabel" transform="translate(208.33447265625, 698.62109375)"><g class="label" transform="translate(-8.362548828125, -6)"><rect rx="0" ry="0" width="16.714664459228516" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes</tspan></text></g></g><g class="edgeLabel" transform="translate(344.836181640625, 698.62109375)"><g class="label" transform="translate(-7.471923828125, -6)"><rect rx="0" ry="0" width="14.936822891235352" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No</tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel" transform="translate(437.3031005859375, 496.3193359375)"><g class="label" transform="translate(-12.359619140625, -6)"><rect rx="0" ry="0" width="24.703454971313477" height="12.000167846679688"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Loop</tspan></text></g></g></g><g class="nodes"><g class="node default term flowchart-label" id="flowchart-Start-0" data-node="true" data-id="Start" transform="translate(171.215576171875, 19)"><rect style="" rx="19" ry="19" x="-50.589111328125" y="-19" width="101.17822265625" height="38"></rect><g class="label" style="" transform="translate(0, -11.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Start BST Search</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Target, Root</tspan></text></g></g><g class="node default conn flowchart-label" id="flowchart-TopEntry-1" data-node="true" data-id="TopEntry" transform="translate(171.215576171875, 90.5)"><circle style="" rx="0" ry="0" r="7.5" width="15" height="15"></circle><g class="label" style="" transform="translate(0, 0)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="node default dec flowchart-label" id="flowchart-CheckNull-2" data-node="true" data-id="CheckNull" transform="translate(118.64013671875, 206.91748046875)"><polygon points="63.91748046875,0 127.8349609375,-63.91748046875 63.91748046875,-127.8349609375 0,-63.91748046875" class="label-container" transform="translate(-63.91748046875,63.91748046875)" style=""></polygon><g class="label" style="" transform="translate(0, -6)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Current == NULL?</tspan></text></g></g><g class="node default term flowchart-label" id="flowchart-NotFound-3" data-node="true" data-id="NotFound" transform="translate(40.7626953125, 397.8271484375)"><rect style="" rx="19" ry="19" x="-40.7626953125" y="-19" width="81.525390625" height="38"></rect><g class="label" style="" transform="translate(0, -11.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Not Found</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Return False</tspan></text></g></g><g class="node default dec flowchart-label" id="flowchart-CheckMatch-4" data-node="true" data-id="CheckMatch" transform="translate(196.517578125, 397.8271484375)"><polygon points="69.9921875,0 139.984375,-69.9921875 69.9921875,-139.984375 0,-69.9921875" class="label-container" transform="translate(-69.9921875,69.9921875)" style=""></polygon><g class="label" style="" transform="translate(0, -6)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Target == Node.Data?</tspan></text></g></g><g class="node default term flowchart-label" id="flowchart-MatchFound-5" data-node="true" data-id="MatchFound" transform="translate(116.4498291015625, 597.47021484375)"><rect style="" rx="19" ry="19" x="-42.484619140625" y="-19" width="84.96923828125" height="38"></rect><g class="label" style="" transform="translate(0, -11.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Match Found</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Return Node</tspan></text></g></g><g class="node default dec flowchart-label" id="flowchart-CheckLess-6" data-node="true" data-id="CheckLess" transform="translate(276.5853271484375, 597.47021484375)"><polygon points="72.65087890625,0 145.3017578125,-72.65087890625 72.65087890625,-145.3017578125 0,-72.65087890625" class="label-container" transform="translate(-72.65087890625,72.65087890625)" style=""></polygon><g class="label" style="" transform="translate(0, -6)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Target &lt; Node.Data?</tspan></text></g></g><g class="node default proc flowchart-label" id="flowchart-GoLeft-7" data-node="true" data-id="GoLeft" transform="translate(208.33447265625, 746.12109375)"><rect class="basic label-container" style="" rx="0" ry="0" x="-44.21875" y="-19" width="88.4375" height="38"></rect><g class="label" style="" transform="translate(0, -11.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Go Left</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Curr = Curr.Left</tspan></text></g></g><g class="node default proc flowchart-label" id="flowchart-GoRight-8" data-node="true" data-id="GoRight" transform="translate(344.836181640625, 746.12109375)"><rect class="basic label-container" style="" rx="0" ry="0" x="-47.282958984375" y="-19" width="94.56591796875" height="38"></rect><g class="label" style="" transform="translate(0, -11.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Go Right</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Curr = Curr.Right</tspan></text></g></g><g class="node default conn flowchart-label" id="flowchart-BotRail-9" data-node="true" data-id="BotRail" transform="translate(329.1607666015625, 817.62109375)"><circle style="" rx="0" ry="0" r="7.5" width="15" height="15"></circle><g class="label" style="" transform="translate(0, 0)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g></g></g></g></svg>
+                    </div>
+                    <div id="view-diag2" style="display: none;">
+                        <!-- Figure 7.1: Phase 2: Binary Search Tree (BST) Lookup & Deletion Algorithm Flowchart -->
+<svg id="svg_extended" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width: 1121.4281005859375px;" viewBox="-8 -8 1121.4281005859375 1270.59326171875" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#svg_extended{font-family:Times New Roman,serif;font-size:13px;fill:#000000;}#svg_extended .error-icon{fill:hsl(180, 0%, 100%);}#svg_extended .error-text{fill:rgb(0, 0, 0);stroke:rgb(0, 0, 0);}#svg_extended .edge-thickness-normal{stroke-width:2px;}#svg_extended .edge-thickness-thick{stroke-width:3.5px;}#svg_extended .edge-pattern-solid{stroke-dasharray:0;}#svg_extended .edge-pattern-dashed{stroke-dasharray:3;}#svg_extended .edge-pattern-dotted{stroke-dasharray:2;}#svg_extended .marker{fill:#000000;stroke:#000000;}#svg_extended .marker.cross{stroke:#000000;}#svg_extended svg{font-family:Times New Roman,serif;font-size:13px;}#svg_extended .label{font-family:Times New Roman,serif;color:#000000;}#svg_extended .cluster-label text{fill:rgb(0, 0, 0);}#svg_extended .cluster-label span,#svg_extended p{color:rgb(0, 0, 0);}#svg_extended .label text,#svg_extended span,#svg_extended p{fill:#000000;color:#000000;}#svg_extended .node rect,#svg_extended .node circle,#svg_extended .node ellipse,#svg_extended .node polygon,#svg_extended .node path{fill:#FFFFFF;stroke:#000000;stroke-width:1px;}#svg_extended .flowchart-label text{text-anchor:middle;}#svg_extended .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#svg_extended .node .label{text-align:center;}#svg_extended .node.clickable{cursor:pointer;}#svg_extended .arrowheadPath{fill:#0b0b0b;}#svg_extended .edgePath .path{stroke:#000000;stroke-width:2.0px;}#svg_extended .flowchart-link{stroke:#000000;fill:none;}#svg_extended .edgeLabel{background-color:#FFFFFF;text-align:center;}#svg_extended .edgeLabel rect{opacity:0.5;background-color:#FFFFFF;fill:#FFFFFF;}#svg_extended .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#svg_extended .cluster rect{fill:hsl(180, 0%, 100%);stroke:hsl(180, 0%, 90%);stroke-width:1px;}#svg_extended .cluster text{fill:rgb(0, 0, 0);}#svg_extended .cluster span,#svg_extended p{color:rgb(0, 0, 0);}#svg_extended div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Times New Roman,serif;font-size:12px;background:hsl(180, 0%, 100%);border:1px solid hsl(180, 0%, 90%);border-radius:2px;pointer-events:none;z-index:100;}#svg_extended .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#svg_extended :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}#svg_extended .default rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;color:rgb(0, 0, 0)!important;}#svg_extended .default polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;color:rgb(0, 0, 0)!important;}#svg_extended .default ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;color:rgb(0, 0, 0)!important;}#svg_extended .default circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;color:rgb(0, 0, 0)!important;}#svg_extended .default path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;color:rgb(0, 0, 0)!important;}#svg_extended .default tspan{fill:rgb(0, 0, 0)!important;}#svg_extended .terminator rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;rx:20px!important;ry:20px!important;}#svg_extended .terminator polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;rx:20px!important;ry:20px!important;}#svg_extended .terminator ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;rx:20px!important;ry:20px!important;}#svg_extended .terminator circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;rx:20px!important;ry:20px!important;}#svg_extended .terminator path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;rx:20px!important;ry:20px!important;}#svg_extended .decision rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;}#svg_extended .decision polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;}#svg_extended .decision ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;}#svg_extended .decision circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;}#svg_extended .decision path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:2px!important;}#svg_extended .process rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .process polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .process ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .process circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .process path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .subcase rect{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .subcase polygon{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .subcase ellipse{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .subcase circle{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .subcase path{fill:rgb(255, 255, 255)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.8px!important;}#svg_extended .connector rect{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#svg_extended .connector polygon{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#svg_extended .connector ellipse{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#svg_extended .connector circle{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}#svg_extended .connector path{fill:rgb(0, 0, 0)!important;stroke:rgb(0, 0, 0)!important;stroke-width:1.5px!important;}</style><g><marker id="svg_extended_flowchart-pointEnd" class="marker flowchart" viewBox="0 0 10 10" refX="6" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="svg_extended_flowchart-pointStart" class="marker flowchart" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="svg_extended_flowchart-circleEnd" class="marker flowchart" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="svg_extended_flowchart-circleStart" class="marker flowchart" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="svg_extended_flowchart-crossEnd" class="marker cross flowchart" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="svg_extended_flowchart-crossStart" class="marker cross flowchart" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M460.041,43L460.041,68L460.041,87.7" id="L-Start-LoopEntry-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-Start LE-LoopEntry" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M453.394,103.974L397.859,133L398.255,153.201" id="L-LoopEntry-CheckNull-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-LoopEntry LE-CheckNull" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M362.297,268.969L295.336,337.032L295.336,428.954" id="L-CheckNull-NotFound-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckNull LE-NotFound" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M434.422,268.969L500.383,337.032L500.803,364.733" id="L-CheckNull-CheckMatch-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckNull LE-CheckMatch" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M441.224,482.817L233.742,574.476L234.165,603.823" id="L-CheckMatch-CheckOp-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckMatch LE-CheckOp" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M211.919,762.233L192.142,818.203L192.142,912.348" id="L-CheckOp-SearchSuccess-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckOp LE-SearchSuccess" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M286.838,731.96L416.242,818.203L416.662,845.904" id="L-CheckOp-CheckChildren-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckOp LE-CheckChildren" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M352.614,963.965L97.292,1060.093L97.292,1093.793" id="L-CheckChildren-Case0-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckChildren LE-Case0" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M384.187,995.538L345.792,1060.093L345.792,1093.793" id="L-CheckChildren-Case1-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckChildren LE-Case1" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M474.514,970.321L644.038,1060.093L644.038,1087.293" id="L-CheckChildren-Case2-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckChildren LE-Case2" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M97.292,1155.093L97.292,1186.593L272.627,1216.417" id="L-Case0-DeleteDone-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-Case0 LE-DeleteDone" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M345.792,1155.093L345.792,1186.593L356.665,1206.92" id="L-Case1-DeleteDone-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-Case1 LE-DeleteDone" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M644.038,1161.593L644.038,1186.593L468.703,1216.417" id="L-Case2-DeleteDone-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-Case2 LE-DeleteDone" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M565.875,477.484L863.825,574.476L864.245,602.176" id="L-CheckMatch-CheckLess-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckMatch LE-CheckLess" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M825.509,747.387L770.243,818.203L770.243,912.348" id="L-CheckLess-TraverseLeft-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckLess LE-TraverseLeft" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M903.142,747.387L957.408,818.203L957.408,912.348" id="L-CheckLess-TraverseRight-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-CheckLess LE-TraverseRight" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M770.243,960.648L770.243,1060.093L914.249,1122.036" id="L-TraverseLeft-LoopExit-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-TraverseLeft LE-LoopExit" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M957.408,960.648L957.408,1060.093L931.439,1115.503" id="L-TraverseRight-LoopExit-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-TraverseRight LE-LoopExit" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path><path d="M932.826,1123.97L1072.286,1060.093L1072.286,939.148L1072.286,818.203L1072.286,696.339L1072.286,574.476L1072.286,455.754L1072.286,337.032L1072.286,231.266L1072.286,133L472.823,101.179" id="L-LoopExit-LoopEntry-0" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-LoopExit LE-LoopEntry" style="fill:none;" marker-end="url(#svg_extended_flowchart-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel" transform="translate(295.3355712890625, 337.0322265625)"><g class="label" transform="translate(-9.4609375, -7.5)"><rect rx="0" ry="0" width="21.557384490966797" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes</tspan></text></g></g><g class="edgeLabel" transform="translate(500.3831787109375, 337.0322265625)"><g class="label" transform="translate(-8.694091796875, -7.5)"><rect rx="0" ry="0" width="17.42618751525879" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No</tspan></text></g></g><g class="edgeLabel" transform="translate(233.74169921875, 574.4755859375)"><g class="label" transform="translate(-50.593017578125, -7.5)"><rect rx="0" ry="0" width="102.27039337158203" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes (Match Found)</tspan></text></g></g><g class="edgeLabel" transform="translate(192.142333984375, 818.203125)"><g class="label" transform="translate(-9.4609375, -7.5)"><rect rx="0" ry="0" width="21.557384490966797" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes</tspan></text></g></g><g class="edgeLabel" transform="translate(416.242431640625, 818.203125)"><g class="label" transform="translate(-59.671875, -7.5)"><rect rx="0" ry="0" width="119.4127426147461" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No (Execute Deletion)</tspan></text></g></g><g class="edgeLabel" transform="translate(97.291748046875, 1060.09326171875)"><g class="label" transform="translate(-27.871826171875, -7.5)"><rect rx="0" ry="0" width="56.4129638671875" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">0 Children</tspan></text></g></g><g class="edgeLabel" transform="translate(345.791748046875, 1060.09326171875)"><g class="label" transform="translate(-19.572265625, -7.5)"><rect rx="0" ry="0" width="39.828670501708984" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">1 Child</tspan></text></g></g><g class="edgeLabel" transform="translate(644.0380859375, 1060.09326171875)"><g class="label" transform="translate(-27.871826171875, -7.5)"><rect rx="0" ry="0" width="57.955528259277344" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">2 Children</tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel" transform="translate(863.825439453125, 574.4755859375)"><g class="label" transform="translate(-8.694091796875, -7.5)"><rect rx="0" ry="0" width="17.42618751525879" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No</tspan></text></g></g><g class="edgeLabel" transform="translate(770.2430419921875, 818.203125)"><g class="label" transform="translate(-36.142578125, -7.5)"><rect rx="0" ry="0" width="73.39532470703125" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Yes (Go Left)</tspan></text></g></g><g class="edgeLabel" transform="translate(957.4078369140625, 818.203125)"><g class="label" transform="translate(-38.75, -7.5)"><rect rx="0" ry="0" width="77.60643005371094" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">No (Go Right)</tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel"><g class="label" transform="translate(0, 0)"><rect rx="0" ry="0" width="0" height="0"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="edgeLabel" transform="translate(1072.2862548828125, 574.4755859375)"><g class="label" transform="translate(-34.141845703125, -7.5)"><rect rx="0" ry="0" width="68.28269958496094" height="15.425671577453613"></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Repeat Loop</tspan></text></g></g></g><g class="nodes"><g class="node default terminator flowchart-label" id="flowchart-Start-32" data-node="true" data-id="Start" transform="translate(460.041259765625, 21.5)"><rect style="" rx="21.5" ry="21.5" x="-114.438232421875" y="-21.5" width="228.87646484375" height="43"></rect><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Start BST Operation</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Input: Target ID, Root, Operation Type</tspan></text></g></g><g class="node default connector flowchart-label" id="flowchart-LoopEntry-33" data-node="true" data-id="LoopEntry" transform="translate(460.041259765625, 100.5)"><circle style="" rx="0" ry="0" r="7.5" width="15" height="15"></circle><g class="label" style="" transform="translate(0, 0)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g><g class="node default decision flowchart-label" id="flowchart-CheckNull-34" data-node="true" data-id="CheckNull" transform="translate(397.859375, 231.26611328125)"><polygon points="73.26611328125,0 146.5322265625,-73.26611328125 73.26611328125,-146.5322265625 0,-73.26611328125" class="label-container" transform="translate(-73.26611328125,73.26611328125)" style=""></polygon><g class="label" style="" transform="translate(0, -7.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Current == NULL?</tspan></text></g></g><g class="node default terminator flowchart-label" id="flowchart-NotFound-35" data-node="true" data-id="NotFound" transform="translate(295.3355712890625, 455.75390625)"><rect style="" rx="21.5" ry="21.5" x="-68.825927734375" y="-21.5" width="137.65185546875" height="43"></rect><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Item Not Found</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Return False / NULL</tspan></text></g></g><g class="node default decision flowchart-label" id="flowchart-CheckMatch-36" data-node="true" data-id="CheckMatch" transform="translate(500.3831787109375, 455.75390625)"><polygon points="86.2216796875,0 172.443359375,-86.2216796875 86.2216796875,-172.443359375 0,-86.2216796875" class="label-container" transform="translate(-86.2216796875,86.2216796875)" style=""></polygon><g class="label" style="" transform="translate(0, -7.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Target == Current.Data?</tspan></text></g></g><g class="node default decision flowchart-label" id="flowchart-CheckOp-37" data-node="true" data-id="CheckOp" transform="translate(233.74169921875, 696.33935546875)"><polygon points="87.716552734375,0 175.43310546875,-87.716552734375 87.716552734375,-175.43310546875 0,-87.716552734375" class="label-container" transform="translate(-87.716552734375,87.716552734375)" style=""></polygon><g class="label" style="" transform="translate(0, -7.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Operation == SEARCH?</tspan></text></g></g><g class="node default terminator flowchart-label" id="flowchart-SearchSuccess-38" data-node="true" data-id="SearchSuccess" transform="translate(192.142333984375, 939.148193359375)"><rect style="" rx="21.5" ry="21.5" x="-85.655029296875" y="-21.5" width="171.31005859375" height="43"></rect><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Search Success</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Return Found Node Record</tspan></text></g></g><g class="node default decision flowchart-label" id="flowchart-CheckChildren-39" data-node="true" data-id="CheckChildren" transform="translate(416.242431640625, 939.148193359375)"><polygon points="88.445068359375,0 176.89013671875,-88.445068359375 88.445068359375,-176.89013671875 0,-88.445068359375" class="label-container" transform="translate(-88.445068359375,88.445068359375)" style=""></polygon><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Evaluate Node Degree</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Number of Children?</tspan></text></g></g><g class="node default subcase flowchart-label" id="flowchart-Case0-40" data-node="true" data-id="Case0" transform="translate(97.291748046875, 1127.09326171875)"><rect class="basic label-container" style="" rx="0" ry="0" x="-97.291748046875" y="-28" width="194.58349609375" height="56"></rect><g class="label" style="" transform="translate(0, -20.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Case 1: Leaf Node (0 Children)</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Delete node cleanly</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Set parent branch pointer = NULL</tspan></text></g></g><g class="node default subcase flowchart-label" id="flowchart-Case1-41" data-node="true" data-id="Case1" transform="translate(345.791748046875, 1127.09326171875)"><rect class="basic label-container" style="" rx="0" ry="0" x="-101.208251953125" y="-28" width="202.41650390625" height="56"></rect><g class="label" style="" transform="translate(0, -20.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Case 2: Single Child (1 Child)</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Bypass deleted node</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Link parent pointer directly to child</tspan></text></g></g><g class="node default subcase flowchart-label" id="flowchart-Case2-42" data-node="true" data-id="Case2" transform="translate(644.0380859375, 1127.09326171875)"><rect class="basic label-container" style="" rx="0" ry="0" x="-147.0380859375" y="-34.5" width="294.076171875" height="69"></rect><g class="label" style="" transform="translate(0, -27)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Case 3: Two Children (2 Children)</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Find Inorder Successor S = min_node(Current.Right)</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Copy S.Data into Current.Data</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Recursively delete S from Right Subtree</tspan></text></g></g><g class="node default terminator flowchart-label" id="flowchart-DeleteDone-43" data-node="true" data-id="DeleteDone" transform="translate(370.6649169921875, 1233.09326171875)"><rect style="" rx="21.5" ry="21.5" x="-92.813232421875" y="-21.5" width="185.62646484375" height="43"></rect><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Deletion Complete</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Return Balanced Subtree Root</tspan></text></g></g><g class="node default decision flowchart-label" id="flowchart-CheckLess-44" data-node="true" data-id="CheckLess" transform="translate(863.825439453125, 696.33935546875)"><polygon points="89.36376953125,0 178.7275390625,-89.36376953125 89.36376953125,-178.7275390625 0,-89.36376953125" class="label-container" transform="translate(-89.36376953125,89.36376953125)" style=""></polygon><g class="label" style="" transform="translate(0, -7.5)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Target &lt; Current.Data?</tspan></text></g></g><g class="node default process flowchart-label" id="flowchart-TraverseLeft-45" data-node="true" data-id="TraverseLeft" transform="translate(770.2430419921875, 939.148193359375)"><rect class="basic label-container" style="" rx="0" ry="0" x="-66.771728515625" y="-21.5" width="133.54345703125" height="43"></rect><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Traverse Left Subtree</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Current = Current.Left</tspan></text></g></g><g class="node default process flowchart-label" id="flowchart-TraverseRight-46" data-node="true" data-id="TraverseRight" transform="translate(957.4078369140625, 939.148193359375)"><rect class="basic label-container" style="" rx="0" ry="0" x="-70.39306640625" y="-21.5" width="140.7861328125" height="43"></rect><g class="label" style="" transform="translate(0, -14)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row">Traverse Right Subtree</tspan><tspan xml:space="preserve" dy="1em" x="0" class="row">Current = Current.Right</tspan></text></g></g><g class="node default connector flowchart-label" id="flowchart-LoopExit-47" data-node="true" data-id="LoopExit" transform="translate(926.00732421875, 1127.09326171875)"><circle style="" rx="0" ry="0" r="7.5" width="15" height="15"></circle><g class="label" style="" transform="translate(0, 0)"><rect></rect><text style=""><tspan xml:space="preserve" dy="1em" x="0" class="row"></tspan></text></g></g></g></g></g></svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Sidebar -->
+        <aside>
+            <div class="card">
+                <h3>📐 Traditional Flowchart Standards</h3>
+                <p>Constructed in strict accordance with ANSI/ISO computer science flowcharting standards:</p>
+                <ul>
+                    <li><strong>Stadium (Pill):</strong> Terminal boundaries (<code>Start</code>, <code>Not Found</code>, <code>Match Found</code>).</li>
+                    <li><strong>Rhombus (Diamond):</strong> Branching decisions (<code>Current == NULL?</code>, <code>Target &lt; Current.Data?</code>).</li>
+                    <li><strong>Rectangle:</strong> Sequential processes (<code>Current = Current.Left</code>).</li>
+                    <li><strong>Non-Crossing Outer Bus:</strong> Loopback arrows route cleanly along the outer perimeter with zero line-crossing.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>⚡ Space & Time Complexity</h3>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Time (Avg)</th>
+                            <th>Time (Worst)</th>
+                            <th>Space</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BST Lookup</td>
+                            <td><strong>O(log n)</strong></td>
+                            <td>O(n)</td>
+                            <td>O(1) aux</td>
+                        </tr>
+                        <tr>
+                            <td>BST Deletion</td>
+                            <td><strong>O(log n)</strong></td>
+                            <td>O(n)</td>
+                            <td>O(h) stack</td>
+                        </tr>
+                        <tr>
+                            <td>Traversals</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                            <td>O(n) output</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>✂️ Three Deletion Cases Handled</h3>
+                <p>When the target node is located, three structural cases are resolved in <code>binary_tree.py</code>:</p>
+                <ul>
+                    <li><strong>Case 1 (Leaf Node):</strong> 0 children &rarr; Remove node and set parent pointer to <code>NULL</code>.</li>
+                    <li><strong>Case 2 (Single Child):</strong> 1 child &rarr; Replace node directly with its active child pointer.</li>
+                    <li><strong>Case 3 (Two Children):</strong> 2 children &rarr; Find Inorder Successor (minimum node in right subtree), copy value, and recursively excise successor.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🐍 Python Implementation Excerpt</h3>
+                <p>Corresponds to <code>campuslostfound/binary_tree.py</code>:</p>
+                <pre><code>def search(self, value):
+    current = self.root
+    while current:
+        if current.data == value:
+            return True
+        elif value < current.data:
+            current = current.left
+        else:
+            current = current.right
+    return False</code></pre>
+            </div>
+        </aside>
+    </main>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        let currentView = 'diag1';
+        let scale = 1.0;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let startX, startY;
+
+        const canvas = document.getElementById('canvas');
+        const viewport = document.getElementById('viewport');
+
+        const mermaid1 = `flowchart TD
+    classDef default fill:#FFFFFF,stroke:#000000,stroke-width:1.5px,color:#000000;
+    classDef terminator fill:#FFFFFF,stroke:#000000,stroke-width:2px,rx:20px,ry:20px;
+    classDef decision fill:#FFFFFF,stroke:#000000,stroke-width:2px;
+    classDef process fill:#FFFFFF,stroke:#000000,stroke-width:1.8px;
+    classDef connector fill:#000000,stroke:#000000,stroke-width:1.5px;
+
+    Start(["Start BST Search\nTarget ID, Root Node"]):::terminator
+    LoopEntry((" ")):::connector
+
+    CheckNull{"Current == NULL?"}:::decision
+    NotFound(["Not Found\nReturn False"]):::terminator
+
+    CheckMatch{"Target == Current.Data?"}:::decision
+    MatchFound(["Match Found\nReturn Record / Node"]):::terminator
+
+    CheckLess{"Target < Current.Data?"}:::decision
+    TraverseLeft["Traverse Left Subtree\nCurrent = Current.Left"]:::process
+    TraverseRight["Traverse Right Subtree\nCurrent = Current.Right"]:::process
+
+    LoopExit((" ")):::connector
+
+    Start --> LoopEntry
+    LoopEntry --> CheckNull
+
+    CheckNull -->|"Yes"| NotFound
+    CheckNull -->|"No"| CheckMatch
+
+    CheckMatch -->|"Yes"| MatchFound
+    CheckMatch -->|"No"| CheckLess
+
+    CheckLess -->|"Yes (Go Left)"| TraverseLeft
+    CheckLess -->|"No (Go Right)"| TraverseRight
+
+    TraverseLeft --> LoopExit
+    TraverseRight --> LoopExit
+
+    LoopExit -->|"Repeat Loop (Next Iteration)"| LoopEntry`;
+        const mermaid2 = `flowchart TD
+    classDef default fill:#FFFFFF,stroke:#000000,stroke-width:1.5px,color:#000000;
+    classDef terminator fill:#FFFFFF,stroke:#000000,stroke-width:2px,rx:20px,ry:20px;
+    classDef decision fill:#FFFFFF,stroke:#000000,stroke-width:2px;
+    classDef process fill:#FFFFFF,stroke:#000000,stroke-width:1.8px;
+    classDef subcase fill:#FFFFFF,stroke:#000000,stroke-width:1.8px;
+    classDef connector fill:#000000,stroke:#000000,stroke-width:1.5px;
+
+    Start(["Start BST Operation\nInput: Target ID, Root, Operation Type"]):::terminator
+    LoopEntry((" ")):::connector
+
+    CheckNull{"Current == NULL?"}:::decision
+    NotFound(["Item Not Found\nReturn False / NULL"]):::terminator
+
+    CheckMatch{"Target == Current.Data?"}:::decision
+
+    CheckOp{"Operation == SEARCH?"}:::decision
+    SearchSuccess(["Search Success\nReturn Found Node Record"]):::terminator
+
+    CheckChildren{"Evaluate Node Degree\nNumber of Children?"}:::decision
+
+    Case0["Case 1: Leaf Node (0 Children)\nDelete node cleanly\nSet parent branch pointer = NULL"]:::subcase
+    Case1["Case 2: Single Child (1 Child)\nBypass deleted node\nLink parent pointer directly to child"]:::subcase
+    Case2["Case 3: Two Children (2 Children)\nFind Inorder Successor S = min_node(Current.Right)\nCopy S.Data into Current.Data\nRecursively delete S from Right Subtree"]:::subcase
+
+    DeleteDone(["Deletion Complete\nReturn Balanced Subtree Root"]):::terminator
+
+    CheckLess{"Target < Current.Data?"}:::decision
+    TraverseLeft["Traverse Left Subtree\nCurrent = Current.Left"]:::process
+    TraverseRight["Traverse Right Subtree\nCurrent = Current.Right"]:::process
+    LoopExit((" ")):::connector
+
+    Start --> LoopEntry
+    LoopEntry --> CheckNull
+
+    CheckNull -->|"Yes"| NotFound
+    CheckNull -->|"No"| CheckMatch
+
+    CheckMatch -->|"Yes (Match Found)"| CheckOp
+    CheckOp -->|"Yes"| SearchSuccess
+    CheckOp -->|"No (Execute Deletion)"| CheckChildren
+
+    CheckChildren -->|"0 Children"| Case0
+    CheckChildren -->|"1 Child"| Case1
+    CheckChildren -->|"2 Children"| Case2
+
+    Case0 --> DeleteDone
+    Case1 --> DeleteDone
+    Case2 --> DeleteDone
+
+    CheckMatch -->|"No"| CheckLess
+    CheckLess -->|"Yes (Go Left)"| TraverseLeft
+    CheckLess -->|"No (Go Right)"| TraverseRight
+
+    TraverseLeft --> LoopExit
+    TraverseRight --> LoopExit
+    LoopExit -->|"Repeat Loop"| LoopEntry`;
+
+        function switchView(viewName) {
+            currentView = viewName;
+            document.getElementById('view-diag1').style.display = viewName === 'diag1' ? 'block' : 'none';
+            document.getElementById('view-diag2').style.display = viewName === 'diag2' ? 'block' : 'none';
+
+            document.getElementById('tab1-btn').classList.toggle('active', viewName === 'diag1');
+            document.getElementById('tab2-btn').classList.toggle('active', viewName === 'diag2');
+
+            resetZoom();
+        }
+
+        function updateTransform() {
+            canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        }
+
+        function zoomIn() {
+            scale = Math.min(scale * 1.2, 3.0);
+            updateTransform();
+        }
+
+        function zoomOut() {
+            scale = Math.max(scale / 1.2, 0.4);
+            updateTransform();
+        }
+
+        function resetZoom() {
+            scale = 1.0;
+            panX = 0;
+            panY = 0;
+            updateTransform();
+        }
+
+        function handleWheel(e) {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            scale = Math.min(Math.max(scale * delta, 0.4), 3.0);
+            updateTransform();
+        }
+
+        function startPan(e) {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            isDragging = true;
+            startX = e.clientX - panX;
+            startY = e.clientY - panY;
+
+            window.addEventListener('mousemove', onPan);
+            window.addEventListener('mouseup', endPan);
+        }
+
+        function onPan(e) {
+            if (!isDragging) return;
+            panX = e.clientX - startX;
+            panY = e.clientY - startY;
+            updateTransform();
+        }
+
+        function endPan() {
+            isDragging = false;
+            window.removeEventListener('mousemove', onPan);
+            window.removeEventListener('mouseup', endPan);
+        }
+
+        function downloadCurrentSVG() {
+            const svgElement = currentView === 'diag1' 
+                ? document.querySelector('#view-diag1 svg') 
+                : document.querySelector('#view-diag2 svg');
+
+            const serializer = new XMLSerializer();
+            const svgStr = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(svgElement);
+            const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentView === 'diag1' 
+                ? 'Figure_7_1_BST_Lookup_Flowchart.svg' 
+                : 'Figure_7_1_BST_Lookup_and_Deletion_Complete.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('SVG Download initiated!');
+        }
+
+        function copyMermaid() {
+            const textToCopy = currentView === 'diag1' ? mermaid1 : mermaid2;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Mermaid code copied to clipboard!');
+            }).catch(() => {
+                showToast('Failed to copy code.');
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
+        }
+    </script>
+</body>
+</html>

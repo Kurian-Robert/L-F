@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Lost &amp; Found Portal</title>
+    <style>
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; }
+        body { background: #f0f4f8; color: #2d3748; display: flex; justify-content: center; padding: 25px 15px; }
+        .card { background: #fff; width: 100%; max-width: 820px; padding: 26px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 8px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { width: 34px; height: 34px; background: #ebf8ff; color: #2b6cb0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; }
+        .user-name { font-size: 14px; font-weight: 700; color: #1a365d; }
+        .role-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; display: inline-block; }
+        .role-admin { background: #feebc8; color: #c05621; }
+        .role-faculty { background: #e9d8fd; color: #553c9a; }
+        .role-user { background: #e2e8f0; color: #4a5568; }
+        .btn-logout { font-size: 12px; font-weight: 600; color: #e53e3e; text-decoration: none; padding: 5px 10px; border: 1px solid #fed7d7; border-radius: 6px; background: #fff5f5; }
+        .btn-logout:hover { background: #fed7d7; }
+        .header { text-align: center; margin-bottom: 18px; }
+        .header h1 { font-size: 22px; color: #1a365d; }
+        .header p { font-size: 13px; color: #718096; margin: 3px 0 6px; }
+        .alert { background: #ebf8ff; border-left: 4px solid #3182ce; color: #2b6cb0; padding: 10px 12px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; font-weight: 500; }
+        .panel-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+        .search-panel { border-left: 4px solid #ed8936; background: #fffaf0; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #edf2f7; }
+        .panel-title { font-size: 15px; font-weight: 700; color: #1a365d; }
+        .panel-subtitle { font-size: 11px; color: #718096; margin-top: 2px; }
+        .search-form { display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px; margin-bottom: 12px; }
+        @media(max-width: 600px) { .search-form { grid-template-columns: 1fr; } }
+        input, select { padding: 9px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 13px; outline: none; }
+        input:focus, select:focus { border-color: #3182ce; }
+        button { padding: 9px 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .btn-search { background: #dd6b20; color: #fff; }
+        .btn-clear { background: #edf2f7; color: #4a5568; padding: 9px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 12px; text-decoration: none; display: inline-flex; align-items: center; }
+        .search-results-list { list-style: none; max-height: 350px; overflow-y: auto; }
+        .search-item-card { background: #fff; border: 1px solid #feebc8; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .item-title { font-size: 14px; font-weight: 700; color: #2d3748; }
+        .item-meta { font-size: 12px; color: #4a5568; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 2px; }
+        .badge-available { background: #c6f6d5; color: #22543d; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+        .badge-handed-over { background: #e2e8f0; color: #4a5568; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+        form.grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .full { grid-column: span 2; }
+        .btn-add { background: #3182ce; color: #fff; }
+        .actions-row { display: flex; gap: 8px; margin-bottom: 18px; }
+        .btn-process { background: #2f855a; color: #fff; flex: 2; }
+        .btn-undo { background: #edf2f7; color: #4a5568; flex: 1; }
+        .pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 10px; }
+        .pill-pending { background: #feebc8; color: #c05621; }
+        .pill-done { background: #def7ec; color: #03543f; }
+        .stage-title { font-size: 12px; font-weight: 700; color: #4a5568; text-transform: uppercase; margin: 10px 0 6px; display: flex; justify-content: space-between; }
+        ul { list-style: none; margin-bottom: 6px; }
+        li { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; margin-bottom: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; }
+        .claim-id-badge { font-family: monospace; font-size: 11px; font-weight: 700; background: #edf2f7; color: #4a5568; padding: 2px 5px; border-radius: 4px; margin-right: 4px; }
+        .tags { display: flex; gap: 6px; align-items: center; }
+        .tag { padding: 2px 6px; border-radius: 8px; font-size: 10px; font-weight: 600; }
+        .p-high { background: #feebc8; color: #c05621; }
+        .p-med { background: #e2e8f0; color: #4a5568; }
+        .p-low { background: #edf2f7; color: #718096; }
+        .btn-claim { background: #3182ce; color: #fff; padding: 4px 10px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
+        .btn-resolve { background: #2f855a; color: #fff; padding: 4px 10px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
+        .badge-done { background: #def7ec; color: #03543f; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+        .badge-found-done { background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+        .empty { font-size: 12px; color: #a0aec0; text-align: center; padding: 8px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- Top Navigation -->
+        <div class="top-navbar">
+            <div class="user-profile">
+                <div class="user-avatar"></div>
+                <div>
+                    <span class="user-name"></span> &nbsp;
+                    <span class="role-badge role-admin">&#128272; Administrator (Full Access)</span>
+                    
+                </div>
+            </div>
+            <a href="/logout/" class="btn-logout">&#8618; Sign Out</a>
+        </div>
+
+        <div class="header">
+            <h1>Campus Lost &amp; Found Portal</h1>
+            <p>Smart Item Tracker &amp; Institutional Registry</p>
+        </div>
+
+        <div class="alert">Welcome to Campus Lost &amp; Found System - Academic Edition</div>
+
+        <!-- ================= 1. SEARCH SECTION (ALL USERS: STUDENT, FACULTY & ADMIN) ================= -->
+        <div class="panel-box search-panel">
+            <div class="panel-header">
+                <div>
+                    <div class="panel-title">&#128269; Search Found Items &mdash; When &amp; Where Found</div>
+                    <div class="panel-subtitle">Search registered found items across campus to check if your lost item has been located</div>
+                </div>
+                <span class="pill pill-pending">&#128205; Found Directory</span>
+            </div>
+
+            <form method="GET" action="/" class="search-form">
+                <input type="text" id="liveSearchInput" name="q" value="" placeholder="Search by item name or finder (e.g. Calculator, Keys, Bag, ID Card)">
+                <select name="loc" id="liveSearchLoc">
+                    <option value="">All Campus Locations</option>
+                    
+                    <option value="Library" >Library</option>
+                    
+                    <option value="Lab 2" >Lab 2</option>
+                    
+                    <option value="Classroom" >Classroom</option>
+                    
+                    <option value="Main Block" >Main Block</option>
+                    
+                    <option value="Cafeteria" >Cafeteria</option>
+                    
+                    <option value="Sports Ground" >Sports Ground</option>
+                    
+                </select>
+                <div style="display:flex; gap:6px;">
+                    <button type="submit" class="btn-search">&#128269; Search</button>
+                    
+                </div>
+            </form>
+
+            <ul class="search-results-list" id="searchResultsContainer">
+                
+                <li class="empty">No matching found items located. Report your lost item below.</li>
+                
+            </ul>
+        </div>
+
+        <!-- ================= 2. REPORT OR REGISTER AN ITEM (STUDENT, FACULTY & ADMIN) ================= -->
+        <div class="panel-box" style="border-left: 4px solid #4299e1;">
+            <div class="panel-header">
+                <div>
+                    <div class="panel-title">&#10133; Report Lost Item / Register Found Item</div>
+                    <div class="panel-subtitle">Submit a report for an item you lost or register an item you found on campus</div>
+                </div>
+            </div>
+
+            <form method="POST" class="grid-form">
+                
+                <input type="hidden" name="action" value="add">
+                <select name="category">
+                    <option value="Lost">&#10060; Report Lost Item (Claim)</option>
+                    <option value="Found">&#9989; Register Found Item</option>
+                </select>
+                <input type="text" name="student_name" placeholder="Your Name / Roll No / ID" required>
+                <input type="text" name="item_name" placeholder="Item Name (e.g. ID Card, Scientific Calculator)" required>
+                <input type="text" name="location" placeholder="Location (e.g. Library, Lab 2, Cafeteria)">
+                <select name="priority" class="full">
+                    <option value="1">High Priority (ID Card, Keys, Wallet, Phone)</option>
+                    <option value="2" selected>Medium Priority (Books, Calculator, Electronics)</option>
+                    <option value="3">Low Priority (Water Bottle, Stationery, Umbrella)</option>
+                </select>
+                <button type="submit" class="btn-add full">+ Submit Item Report</button>
+            </form>
+        </div>
+
+        <!-- ================= 3. ADMIN ONLY: CLAIMS MANAGEMENT, QUEUES & HANDOVERS ================= -->
+        
+        <div class="panel-box" style="border-left: 4px solid #c53030; background: #fffbfb;">
+            <div class="panel-header">
+                <div>
+                    <div class="panel-title" style="color:#c53030;">&#128272; Administrator Console: Claims &amp; Handovers</div>
+                    <div class="panel-subtitle">Admin exclusive controls: Priority resolution, claim verification, handovers &amp; conflict management</div>
+                </div>
+                <span class="pill role-admin">Staff Only</span>
+            </div>
+
+            <!-- Global Min-Heap & Undo Actions -->
+            <div class="actions-row">
+                <form method="POST" style="flex:2;">
+                    
+                    <input type="hidden" name="action" value="process_next">
+                    <button type="submit" class="btn-process" style="width:100%;">&#10003; Process Next Item (Priority Min-Heap)</button>
+                </form>
+                <form method="POST" style="flex:1;">
+                    
+                    <input type="hidden" name="action" value="undo">
+                    <button type="submit" class="btn-undo" style="width:100%;">&#8634; Undo</button>
+                </form>
+            </div>
+
+            <!-- Lost Item Claim Processing Queue -->
+            <div class="stage-title">
+                <span>&#128220; Lost Item Claims in Processing Queue (Min-Heap)</span>
+                <span style="font-size:11px; color:#718096;">Processing: 5</span>
+            </div>
+            <ul>
+                
+                <li>
+                    <div>
+                        <span class="claim-id-badge">CLM-7</span>
+                        <strong>Diary</strong>
+                        <div style="font-size:11px; color:#718096;">Claimant: 26MCAC29 &bull; Location: Classroom</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-low">Low</span>
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Lost">
+                            <input type="hidden" name="item_id" value="6">
+                            <button type="submit" class="btn-claim">&#10003; Process Claim</button>
+                        </form>
+                    </div>
+                </li>
+                
+                <li>
+                    <div>
+                        <span class="claim-id-badge">CLM-8</span>
+                        <strong>Book</strong>
+                        <div style="font-size:11px; color:#718096;">Claimant: 26MCAC30 &bull; Location: Classroom</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-low">Low</span>
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Lost">
+                            <input type="hidden" name="item_id" value="7">
+                            <button type="submit" class="btn-claim">&#10003; Process Claim</button>
+                        </form>
+                    </div>
+                </li>
+                
+                <li>
+                    <div>
+                        <span class="claim-id-badge">CLM-9</span>
+                        <strong>Bottle</strong>
+                        <div style="font-size:11px; color:#718096;">Claimant: 26MCAC34 &bull; Location: Lab</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-low">Low</span>
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Lost">
+                            <input type="hidden" name="item_id" value="8">
+                            <button type="submit" class="btn-claim">&#10003; Process Claim</button>
+                        </form>
+                    </div>
+                </li>
+                
+                <li>
+                    <div>
+                        <span class="claim-id-badge">CLM-11</span>
+                        <strong>Bag</strong>
+                        <div style="font-size:11px; color:#718096;">Claimant: 26MCAC28 &bull; Location: CAFE</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-low">Low</span>
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Lost">
+                            <input type="hidden" name="item_id" value="10">
+                            <button type="submit" class="btn-claim">&#10003; Process Claim</button>
+                        </form>
+                    </div>
+                </li>
+                
+                <li>
+                    <div>
+                        <span class="claim-id-badge">CLM-12</span>
+                        <strong>ID CARD</strong>
+                        <div style="font-size:11px; color:#718096;">Claimant: 26MCAC32 &bull; Location: Classroom</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-high">High</span>
+                        
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Lost">
+                            <input type="hidden" name="item_id" value="9">
+                            <button type="submit" class="btn-claim">&#10003; Process Claim</button>
+                        </form>
+                    </div>
+                </li>
+                
+            </ul>
+
+            <!-- Found Items Handover Section -->
+            <div class="stage-title" style="margin-top:14px;">
+                <span>&#128230; Found Items Inventory (Awaiting Handover)</span>
+                <span style="font-size:11px; color:#718096;">Pending: 3</span>
+            </div>
+            <ul>
+                
+                <li>
+                    <div>
+                        <strong>Bag</strong>
+                        <div style="font-size:11px; color:#718096;">Finder: 26MCAC222 &bull; Location: Classroom</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-low">Low</span>
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Found">
+                            <input type="hidden" name="item_id" value="5">
+                            <button type="submit" class="btn-resolve">&#10003; Handover / Resolve</button>
+                        </form>
+                    </div>
+                </li>
+                
+                <li>
+                    <div>
+                        <strong>Charger</strong>
+                        <div style="font-size:11px; color:#718096;">Finder: 26MCAC22 &bull; Location: Lab</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-low">Low</span>
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Found">
+                            <input type="hidden" name="item_id" value="6">
+                            <button type="submit" class="btn-resolve">&#10003; Handover / Resolve</button>
+                        </form>
+                    </div>
+                </li>
+                
+                <li>
+                    <div>
+                        <strong>Diary</strong>
+                        <div style="font-size:11px; color:#718096;">Finder: 26MCAC29 &bull; Location: Classroom</div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag p-med">Medium</span>
+                        
+                        <form method="POST" style="margin:0;">
+                            
+                            <input type="hidden" name="action" value="process_item">
+                            <input type="hidden" name="category" value="Found">
+                            <input type="hidden" name="item_id" value="7">
+                            <button type="submit" class="btn-resolve">&#10003; Handover / Resolve</button>
+                        </form>
+                    </div>
+                </li>
+                
+            </ul>
+
+            <!-- Resolved Claims History (Done) -->
+            
+            <div class="stage-title" style="margin-top:14px;">
+                <span style="color:#03543f;">&#10004; Recently Resolved Claims &amp; Handovers</span>
+            </div>
+            <ul>
+                
+                <li style="background:#f0fdf4; border-color:#bbf7d0;">
+                    <div>
+                        <span class="claim-id-badge">CLM-8</span>
+                        <strong style="color:#15803d;">Watch</strong>
+                        <span style="font-size:11px; color:#718096;">(Claimed by 26MCAC25)</span>
+                    </div>
+                    <span class="badge-done">&#10004; Claim Done</span>
+                </li>
+                
+                <li style="background:#f0fdf4; border-color:#bbf7d0;">
+                    <div>
+                        <span class="claim-id-badge">CLM-3</span>
+                        <strong style="color:#15803d;">Airpod</strong>
+                        <span style="font-size:11px; color:#718096;">(Claimed by 26MCAC26)</span>
+                    </div>
+                    <span class="badge-done">&#10004; Claim Done</span>
+                </li>
+                
+                <li style="background:#f0fdf4; border-color:#bbf7d0;">
+                    <div>
+                        <span class="claim-id-badge">CLM-2</span>
+                        <strong style="color:#15803d;">Mouse</strong>
+                        <span style="font-size:11px; color:#718096;">(Claimed by 26MCAC28)</span>
+                    </div>
+                    <span class="badge-done">&#10004; Claim Done</span>
+                </li>
+                
+                <li style="background:#f0fdf4; border-color:#bbf7d0;">
+                    <div>
+                        <span class="claim-id-badge">CLM-1</span>
+                        <strong style="color:#15803d;">Student ID Card</strong>
+                        <span style="font-size:11px; color:#718096;">(Claimed by 26MCAC28)</span>
+                    </div>
+                    <span class="badge-done">&#10004; Claim Done</span>
+                </li>
+                
+                
+                <li style="background:#f0f9ff; border-color:#bae6fd;">
+                    <div>
+                        <strong style="color:#0284c7;">Watch</strong>
+                        <span style="font-size:11px; color:#718096;">(Finder: 26MCAC25)</span>
+                    </div>
+                    <span class="badge-found-done">&#10004; Handed Over</span>
+                </li>
+                
+                <li style="background:#f0f9ff; border-color:#bae6fd;">
+                    <div>
+                        <strong style="color:#0284c7;">Airpod</strong>
+                        <span style="font-size:11px; color:#718096;">(Finder: 26MCAC26)</span>
+                    </div>
+                    <span class="badge-found-done">&#10004; Handed Over</span>
+                </li>
+                
+                <li style="background:#f0f9ff; border-color:#bae6fd;">
+                    <div>
+                        <strong style="color:#0284c7;">Mouse</strong>
+                        <span style="font-size:11px; color:#718096;">(Finder: 26MCAC28)</span>
+                    </div>
+                    <span class="badge-found-done">&#10004; Handed Over</span>
+                </li>
+                
+                <li style="background:#f0f9ff; border-color:#bae6fd;">
+                    <div>
+                        <strong style="color:#0284c7;">Scientific Calculator</strong>
+                        <span style="font-size:11px; color:#718096;">(Finder: Staff Member)</span>
+                    </div>
+                    <span class="badge-found-done">&#10004; Handed Over</span>
+                </li>
+                
+            </ul>
+            
+        </div>
+        
+    </div>
+
+    <!-- Real-time live search filter script -->
+    <script>
+        const searchInput = document.getElementById('liveSearchInput');
+        const searchLoc = document.getElementById('liveSearchLoc');
+        const cards = document.querySelectorAll('.search-item-card');
+
+        function filterCards() {
+            const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const loc = searchLoc ? searchLoc.value.toLowerCase().trim() : '';
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name') || '';
+                const itemLoc = card.getAttribute('data-loc') || '';
+                const finder = card.getAttribute('data-finder') || '';
+                const matchQ = !q || name.includes(q) || finder.includes(q);
+                const matchLoc = !loc || itemLoc.includes(loc);
+                card.style.display = (matchQ && matchLoc) ? 'flex' : 'none';
+            });
+        }
+
+        if (searchInput && searchLoc) {
+            searchInput.addEventListener('input', filterCards);
+            searchLoc.addEventListener('change', filterCards);
+        }
+    </script>
+</body>
+</html>
